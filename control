@@ -1,0 +1,9 @@
+Package: com.jijiang778.adblockpro
+Name: AdBlockPro
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: 去除影视软件中所有广告，拦截Sigmob、GDT、快手、1RTB等广告SDK网络请求
+Maintainer: JiJiang778
+Author: JiJiang778
+Section: Tweaks

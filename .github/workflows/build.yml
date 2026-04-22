@@ -1,0 +1,38 @@
+name: Build Deb
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_arm64:
+        description: '打包无根DEB (iphoneos-arm64)'
+        type: boolean
+        default: true
+
+jobs:
+  build-rootless:
+    if: ${{ github.event.inputs.build_arm64 == 'true' }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
+
+      - name: Build deb for rootless
+        run: |
+          sed -i 's/\r$//' control Makefile
+          sed -i 's/^ARCHS := .*/ARCHS := arm64/' Makefile
+          sed -i 's/^Architecture: .*/Architecture: iphoneos-arm64/' control
+          make clean
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdBlockPro
+          path: packages/*.deb
+          if-no-files-found: error
